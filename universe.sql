@@ -48,9 +48,9 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.classification_type (
-    type_id integer NOT NULL,
+    classification_type_id integer NOT NULL,
     classification_for character varying(30) NOT NULL,
-    type character varying(30) NOT NULL,
+    name character varying(30) NOT NULL,
     description text
 );
 
@@ -76,7 +76,7 @@ ALTER TABLE public.classification_type_type_id_seq OWNER TO freecodecamp;
 -- Name: classification_type_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
-ALTER SEQUENCE public.classification_type_type_id_seq OWNED BY public.classification_type.type_id;
+ALTER SEQUENCE public.classification_type_type_id_seq OWNED BY public.classification_type.classification_type_id;
 
 
 --
@@ -89,7 +89,7 @@ CREATE TABLE public.galaxy (
     diameter_light_year integer,
     number_of_stars_billion integer,
     apparent_magnitude numeric(5,2),
-    type_id integer
+    classification_type_id integer
 );
 
 
@@ -164,7 +164,7 @@ CREATE TABLE public.planet (
     has_life boolean,
     description text,
     star_id integer,
-    type_id integer
+    classification_type_id integer
 );
 
 
@@ -201,7 +201,7 @@ CREATE TABLE public.star (
     name character varying(50) NOT NULL,
     distance_from_earth integer,
     galaxy_id integer,
-    type_id integer
+    classification_type_id integer
 );
 
 
@@ -230,10 +230,10 @@ ALTER SEQUENCE public.star_star_id_seq OWNED BY public.star.star_id;
 
 
 --
--- Name: classification_type type_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+-- Name: classification_type classification_type_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.classification_type ALTER COLUMN type_id SET DEFAULT nextval('public.classification_type_type_id_seq'::regclass);
+ALTER TABLE ONLY public.classification_type ALTER COLUMN classification_type_id SET DEFAULT nextval('public.classification_type_type_id_seq'::regclass);
 
 
 --
@@ -397,7 +397,7 @@ SELECT pg_catalog.setval('public.star_star_id_seq', 6, true);
 --
 
 ALTER TABLE ONLY public.classification_type
-    ADD CONSTRAINT classification_type_pkey PRIMARY KEY (type_id);
+    ADD CONSTRAINT classification_type_pkey PRIMARY KEY (classification_type_id);
 
 
 --
@@ -405,7 +405,7 @@ ALTER TABLE ONLY public.classification_type
 --
 
 ALTER TABLE ONLY public.classification_type
-    ADD CONSTRAINT classification_type_type_key UNIQUE (type);
+    ADD CONSTRAINT classification_type_type_key UNIQUE (name);
 
 
 --
@@ -477,7 +477,7 @@ ALTER TABLE ONLY public.star
 --
 
 ALTER TABLE ONLY public.galaxy
-    ADD CONSTRAINT galaxy_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.classification_type(type_id);
+    ADD CONSTRAINT galaxy_type_id_fkey FOREIGN KEY (classification_type_id) REFERENCES public.classification_type(classification_type_id);
 
 
 --
@@ -501,7 +501,7 @@ ALTER TABLE ONLY public.planet
 --
 
 ALTER TABLE ONLY public.planet
-    ADD CONSTRAINT planet_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.classification_type(type_id);
+    ADD CONSTRAINT planet_type_id_fkey FOREIGN KEY (classification_type_id) REFERENCES public.classification_type(classification_type_id);
 
 
 --
@@ -517,7 +517,7 @@ ALTER TABLE ONLY public.star
 --
 
 ALTER TABLE ONLY public.star
-    ADD CONSTRAINT star_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.classification_type(type_id);
+    ADD CONSTRAINT star_type_id_fkey FOREIGN KEY (classification_type_id) REFERENCES public.classification_type(classification_type_id);
 
 
 --
